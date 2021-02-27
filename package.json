@@ -1,0 +1,26 @@
+{
+  "name": "team-profile-generator",
+  "version": "1.0.0",
+  "description": "Making html team profiles using node",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cwwittor/Team-Profile-Generator.git"
+  },
+  "author": "ChristianWittorp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cwwittor/Team-Profile-Generator/issues"
+  },
+  "homepage": "https://github.com/cwwittor/Team-Profile-Generator#readme",
+  "dependencies": {
+    "inquirer": "^8.0.0",
+    "jest": "^26.6.3"
+  }
+}
