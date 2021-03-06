@@ -1,6 +1,5 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-const Employee = require("./lib/Employee.js");
 const Engineer = require("./lib/Engineer.js");
 const Intern = require("./lib/Intern.js");
 const Manager = require("./lib/Manager.js");
@@ -8,6 +7,7 @@ const engineerBlock = require("./html/engineerBlock.js");
 const internBlock = require("./html/internBlock.js");
 const managerBlock = require("./html/managerBlock.js");
 let nameOfTeam;
+let html;
 const listOfEmployees = [];
 
 
@@ -34,13 +34,23 @@ const jobAdd = () => {
             "Team Building Complete"
     ]
     }]).then(function (response) {
-        const userResponse = response;
-        if (userResponse === "Add an engineer") {
+        console.log(response);
+        let userResponse = JSON.stringify(response);
+        console.log(userResponse);
+        console.log(userResponse.includes("intern"));
+
+
+
+        if (userResponse.includes("engineer")) {
             addEngineer();
-        } else if (userResponse === "Add an intern") {
+        } else if (userResponse.includes("intern")) {
+            console.log("made it inside of if statement")
             addIntern();
-        } else if (userResponse === "Team Building Complete") {
-            //write the file
+        } else if (userResponse.includes("Complete")) {
+            generateHTML();
+            fs.writeFile("MyTeam.html", html, function(err) {
+                if (err) throw err;
+            });
         }
     });
 }
@@ -91,9 +101,9 @@ const addIntern = () => {
     {
         type: "input",
         message: "What is the university of the Intern?",
-        name: "officeNumber"
-    }]).then(function ({name, id, email, officeNumber}) {
-        let newIntern = new Intern(name, id, email, officeNumber);
+        name: "university"
+    }]).then(function ({name, id, email, university}) {
+        let newIntern = new Intern(name, id, email, university);
         listOfEmployees.push(newIntern);
         jobAdd();
     });
@@ -124,5 +134,43 @@ const addIntern = () => {
             listOfEmployees.push(newEngineer);
             jobAdd();
         });
+    }
+
+    const generateHTML = () => {
+        let currentEmployees = "";
+        for (let i = 0; i < listOfEmployees.length; i++) {
+            if (listOfEmployees[i].getRole() === "Engineer") {
+                currentEmployees += engineerBlock(listOfEmployees[i]);
+            } else if (listOfEmployees[i].getRole() === "Intern") {
+                currentEmployees += internBlock(listOfEmployees[i]);
+            } else if (listOfEmployees[i].getRole() === "Manager") {
+                currentEmployees += managerBlock(listOfEmployees[i]);
+            }
+        }
+
+        html =`
+        <!DOCTYPE html>
+        <html lang="en">
+    
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" />
+            <title>${nameOfTeam}</title>
+    
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+            <link rel="stylesheet" href="html/style.css">
+        </head>
+    
+        <body>
+            <div class="container col-lg-12">
+    
+                ${currentEmployees}
+    
+            </div>
+    
+        </body>
+        `
+        
+
     }
 
