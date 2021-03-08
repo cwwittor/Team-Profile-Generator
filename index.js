@@ -8,9 +8,11 @@ const internBlock = require("./html/internBlock.js");
 const managerBlock = require("./html/managerBlock.js");
 let nameOfTeam;
 let html;
+//each employee is pushed into this array
 const listOfEmployees = [];
 
 
+    //initial inquirer that prompts user for team info and directs them to the adding of a manager
     inquirer.prompt([
         {
             type: "input",
@@ -22,7 +24,7 @@ const listOfEmployees = [];
         addManager();
     });
 
-
+//Hub for the user to add a new employee or finish the list
 const jobAdd = () => {
     inquirer.prompt([{
         type: "list",
@@ -34,20 +36,17 @@ const jobAdd = () => {
             "Team Building Complete"
     ]
     }]).then(function (response) {
-        console.log(response);
+        //If/Else tree which will add an intern, engineer, or finish the program based on user choice
         let userResponse = JSON.stringify(response);
-        console.log(userResponse);
-        console.log(userResponse.includes("intern"));
-
-
-
         if (userResponse.includes("engineer")) {
             addEngineer();
         } else if (userResponse.includes("intern")) {
             console.log("made it inside of if statement")
             addIntern();
         } else if (userResponse.includes("Complete")) {
+            //calls for the generation of the html info
             generateHTML();
+            //writes the html file
             fs.writeFile("MyTeam.html", html, function(err) {
                 if (err) throw err;
             });
@@ -55,6 +54,7 @@ const jobAdd = () => {
     });
 }
 
+//Adds a manager and asks for input on manager
 const addManager = () => {
     inquirer.prompt([{
         type: "input",
@@ -82,6 +82,7 @@ const addManager = () => {
     });
 }
 
+//Adds a intern and asks for input on intern
 const addIntern = () => {
     inquirer.prompt([{
         type: "input",
@@ -109,6 +110,7 @@ const addIntern = () => {
     });
     }
 
+    //Adds an engineer and asks for input on engineer
     const addEngineer = () => {
         inquirer.prompt([{
             type: "input",
@@ -136,6 +138,7 @@ const addIntern = () => {
         });
     }
 
+    //adds all html blocks to the currentEmployees array so they can be added to the final html later before its written
     const generateHTML = () => {
         let currentEmployees = "";
         for (let i = 0; i < listOfEmployees.length; i++) {
